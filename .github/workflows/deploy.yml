@@ -54,8 +54,7 @@ jobs:
           cat .env
 
       - name: Prepare Laravel Application
-        run: |          
-          php artisan migrate
+        run: |                    
           php artisan key:generate
 
       - name: 'Login to Dockerhub'
