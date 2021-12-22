@@ -16,6 +16,7 @@ RUN apt update \
     unzip \
     zip \
     zlib1g-dev \
+    libonig-dev \
 && docker-php-ext-install \
     bz2 \
     intl \
