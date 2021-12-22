@@ -10,7 +10,7 @@ RUN apt update \
     g++ \    
     libicu-dev \
     libpq-dev \
-    llibfreetype6-dev libicu-dev libjpeg62-turbo-dev libpng-dev libpq-dev \
+    libfreetype6-dev libicu-dev libjpeg62-turbo-dev libpng-dev libpq-dev \
     libsasl2-dev libssl-dev libwebp-dev libxpm-dev libzip-dev \
     unzip \
     zip \
