@@ -55,6 +55,7 @@ jobs:
 
       - name: Prepare Laravel Application
         run: |          
+          php artisan migrate
           php artisan key:generate
 
       - name: 'Login to Dockerhub'
@@ -65,8 +66,8 @@ jobs:
 
       - name: 'Build and push'
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-react .
-          docker push ${{ secrets.DOCKERHUB_USERNAME}}/hello-react
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/latihan-quiz2-cloud .
+          docker push ${{ secrets.DOCKERHUB_USERNAME}}/latihan-quiz2-cloud
 
       - name: 'Write config'
         run: |
@@ -99,7 +100,7 @@ jobs:
             oci compute instance list \
             --lifecycle-state RUNNING \
             --compartment-id ${{secrets.VM_COMPARTMENT_OCID}} \
-            --display-name cicd-demo \
+            --display-name quiz2_cloud \
             --query "data [0].id" \
             --raw-output \
             )" >> $GITHUB_ENV
