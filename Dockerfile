@@ -1,8 +1,13 @@
 FROM php:7.4-apache
 
-WORKDIR /var/www/html
+WORKDIR /var/www/laravel
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN a2enmod rewrite headers \
+    && chown -R www-data.www-data /var/www/laravel \
+    && chmod -R 755 /var/www/laravel \
+    && chmod -R 777 /var/www/laravel/storage 
 
 RUN apt update \
     && apt install -y \
@@ -20,4 +25,4 @@ RUN apt update \
     opcache \
     pdo \
     pdo_pgsql \
-    pgsql \
+    pgsql 
