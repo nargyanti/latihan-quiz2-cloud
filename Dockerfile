@@ -36,7 +36,8 @@ USER root
 RUN a2enmod rewrite headers \
     && chown -R www-data.www-data /var/www/html \
     && chmod -R 755 /var/www/html \
-    && systemctl restart apache2
+    && chown -R apache:apache /var/www/html \
+    && sudo systemctl restart httpd
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
