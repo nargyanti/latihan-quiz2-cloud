@@ -5,8 +5,7 @@ WORKDIR /var/www/html
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN apt update \
-    && apt install -y \
-    apt-utils \
+    && apt install -y \    
     g++ \    
     libicu-dev \
     libpq-dev \
@@ -17,6 +16,7 @@ RUN apt update \
     zip \
     zlib1g-dev \
     libonig-dev \
+    apt-utils \
 && docker-php-ext-install \
     bz2 \
     intl \
