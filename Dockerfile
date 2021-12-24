@@ -35,8 +35,7 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 USER root
 RUN a2enmod rewrite headers \
     && chown -R www-data.www-data /var/www/html \
-    && chmod -R 755 /var/www/html \
-    && systemctl restart httpd
+    && chmod -R 755 /var/www/html 
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
