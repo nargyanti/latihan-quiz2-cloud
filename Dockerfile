@@ -1,6 +1,6 @@
 FROM php:7.4-apache
 
-WORKDIR /var/www/html
+WORKDIR /var/www/quiz2
 
 RUN apt update \
     && apt install -y \    
@@ -47,9 +47,9 @@ USER root
 RUN a2enmod rewrite headers \
     && a2ensite laravel \
     && a2dissite 000-default \
-    && chown -R www-data.www-data /var/www/html \
-    && chmod -R 755 /var/www/html \    
-    && chmod -R 777 /var/www/html/storage
+    && chown -R www-data.www-data /var/www/quiz2 \
+    && chmod -R 755 /var/www/quiz2 \    
+    && chmod -R 777 /var/www/quiz2/storage
 
-COPY . /var/www/html
+COPY . /var/www/quiz2
 RUN composer install --optimize-autoloader --no-dev
