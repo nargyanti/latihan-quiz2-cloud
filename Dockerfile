@@ -52,5 +52,7 @@ RUN a2enmod rewrite headers \
     && a2dissite 000-default \
     && chown -R www-data.www-data /var/www/quiz2 \
     && chmod -R 755 /var/www/quiz2 \    
-    && chmod -R 777 /var/www/quiz2/storage
+    && chmod -R 777 /var/www/quiz2/storage \
+    && service apache2 restart \
+    && service apache2 reload 
 
