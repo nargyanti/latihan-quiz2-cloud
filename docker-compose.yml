@@ -1,6 +1,7 @@
 version: "3"
 services:
   web:
+    build: .
     image: nargyanti/latihan-quiz2-cloud:latest
     container_name: web
     restart: unless-stopped
