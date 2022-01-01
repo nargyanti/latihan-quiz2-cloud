@@ -15,7 +15,8 @@ RUN apt update \
     zlib1g-dev \
     libonig-dev \
     apt-utils \
-&& docker-php-ext-install \
+    curl \
+    && docker-php-ext-install \
     bz2 \
     intl \
     iconv \
@@ -28,13 +29,28 @@ RUN apt update \
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+# ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+# RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+# RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+# RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+
+# CMD php artisan serve --host=${ env.INSTANCE_IP };
+
+
+# RUN a2enmod rewrite headers \
+#     && a2ensite laravel \
+#     && a2dissite 000-default 
+
+COPY docker/ /
 
 USER root
 RUN a2enmod rewrite headers \
+    && a2ensite laravel \
+    && a2dissite 000-default \
     && chown -R www-data.www-data /var/www/html \
-    && chmod -R 755 /var/www/html 
+    && chmod -R 755 /var/www/html \
+    && chown www-data:www-data bootstrap/cache \
+    && chmod -R 777 /var/www/laravel/storage
 
-RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+COPY . /var/www/html
+RUN composer install --optimize-autoloader --no-dev
