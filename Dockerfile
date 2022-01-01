@@ -37,6 +37,7 @@ USER root
 RUN a2enmod rewrite headers \
     && chown -R www-data.www-data /var/www/html \
     && chmod -R 755 /var/www/html 
+RUN a2ensite 000-default
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
