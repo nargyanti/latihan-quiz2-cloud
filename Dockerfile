@@ -48,9 +48,8 @@ RUN a2enmod rewrite headers \
     && a2ensite laravel \
     && a2dissite 000-default \
     && chown -R www-data.www-data /var/www/html \
-    && chmod -R 755 /var/www/html \
-    && chown www-data:www-data bootstrap/cache \
-    && chmod -R 777 /var/www/laravel/storage
+    && chmod -R 755 /var/www/html \    
+    && chmod -R 777 /var/www/html/storage
 
 COPY . /var/www/html
 RUN composer install --optimize-autoloader --no-dev
