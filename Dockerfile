@@ -43,6 +43,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 COPY docker/ /
 
+COPY . /var/www/quiz2
+RUN composer install --optimize-autoloader --no-dev
+
 USER root
 RUN a2enmod rewrite headers \
     && a2ensite laravel \
@@ -51,5 +54,3 @@ RUN a2enmod rewrite headers \
     && chmod -R 755 /var/www/quiz2 \    
     && chmod -R 777 /var/www/quiz2/storage
 
-COPY . /var/www/quiz2
-RUN composer install --optimize-autoloader --no-dev
