@@ -1,58 +1,42 @@
 FROM php:7.4-apache
 
-WORKDIR /var/www/quiz2
+WORKDIR /var/www/laravel
 
-RUN apt update \
-    && apt install -y \    
-    g++ \    
-    libicu-dev \
-    libpq-dev \
-    libbz2-dev \
+RUN curl -o /usr/local/bin/composer https://getcomposer.org/download/latest-stable/composer.phar \
+    && chmod +x /usr/local/bin/composer
+
+# hadolint ignore=DL3008
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y \
+    cron \
+    icu-devtools \
+    jq \
     libfreetype6-dev libicu-dev libjpeg62-turbo-dev libpng-dev libpq-dev \
-    libsasl2-dev libssl-dev libwebp-dev libxpm-dev libzip-dev \
+    libsasl2-dev libssl-dev libwebp-dev libxpm-dev libzip-dev libzstd-dev \
     unzip \
-    zip \
     zlib1g-dev \
-    libonig-dev \
-    apt-utils \
-    curl \
-    && docker-php-ext-install \
-    bz2 \
-    intl \
-    iconv \
-    bcmath \
-    opcache \
-    calendar \
-    mbstring \
-    pdo_mysql \
-    zip
+    && apt-get clean \
+    && apt-get autoclean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# hadolint ignore=DL3059
+RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
+    && pecl install --configureoptions='enable-redis-igbinary="yes" enable-redis-lzf="yes" enable-redis-zstd="yes"' igbinary zstd redis \
+    && pecl clear-cache \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-xpm \
+    && docker-php-ext-install gd intl pdo_mysql pdo_pgsql zip \
+    && docker-php-ext-enable igbinary opcache redis zstd
 
-# ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
-# RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-# RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
-# RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
-
-# CMD php artisan serve --host=${ env.INSTANCE_IP };
-
-
-# RUN a2enmod rewrite headers \
-#     && a2ensite laravel \
-#     && a2dissite 000-default 
+COPY composer.json composer.lock ./
+RUN composer install --no-autoloader --no-scripts --no-dev
 
 COPY docker/ /
-
-COPY . /var/www/quiz2
-RUN composer install --optimize-autoloader --no-dev
-
-USER root
 RUN a2enmod rewrite headers \
     && a2ensite laravel \
     && a2dissite 000-default \
-    && chown -R www-data.www-data /var/www/quiz2 \
-    && chmod -R 755 /var/www/quiz2 \    
-    && chmod -R 777 /var/www/quiz2/storage \
-    && service apache2 restart \
-    && service apache2 reload 
+    && chmod +x /usr/local/bin/docker-laravel-entrypoint
 
+COPY . /var/www/laravel
+RUN composer install --optimize-autoloader --no-dev
+
+CMD ["docker-laravel-entrypoint"]
