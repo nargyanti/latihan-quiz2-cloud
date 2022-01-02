@@ -9,9 +9,49 @@ if [[ -z "$APP_ENV" ]]; then
     echo -e "\e[33mENV undefined: APP_ENV,\e[0m use default $APP_ENV"
 fi
 
+if [[ -z "$APP_NAME" ]]; then
+    export APP_NAME=laravel
+    echo -e "\e[33mENV undefined: APP_NAME,\e[0m use default $APP_NAME"
+fi
+
+if [[ -z "$APP_KEY" ]]; then
+    export APP_KEY=base64:f0MaMeJJ5AApDcnHQEhXbsSViP+5PkNp3XhwgC4U4F0=
+    echo -e "\e[33mENV undefined: APP_KEY,\e[0m use default $APP_KEY"
+fi
+
+if [[ -z "$APP_DEBUG" ]]; then
+    export APP_DEBUG=true
+    echo -e "\e[33mENV undefined: APP_DEBUG,\e[0m use default $APP_DEBUG"
+fi
+
 if [[ -z "$DB_CONNECTION" ]]; then
-    export DB_CONNECTION=sqlite
+    export DB_CONNECTION=mysql
     echo -e "\e[33mENV undefined: DB_CONNECTION,\e[0m use default $DB_CONNECTION"
+fi
+
+if [[ -z "$DB_HOST" ]]; then
+    export DB_HOST=${{ secrets.DB_HOST }}
+    echo -e "\e[33mENV undefined: DB_HOST,\e[0m use default $DB_HOST"
+fi
+
+if [[ -z "$DB_PORT" ]]; then
+    export DB_PORT=3306
+    echo -e "\e[33mENV undefined: DB_PORT,\e[0m use default $DB_PORT"
+fi
+
+if [[ -z "$DB_DATABASE" ]]; then
+    export DB_DATABASE=${{ secrets.DB_HOST }}
+    echo -e "\e[33mENV undefined: DB_DATABASE,\e[0m use default $DB_DATABASE"
+fi
+
+if [[ -z "$DB_USERNAME" ]]; then
+    export DB_USERNAME=${{ secrets.DB_USERNAME }}
+    echo -e "\e[33mENV undefined: DB_USERNAME,\e[0m use default $DB_USERNAME"
+fi
+
+if [[ -z "$DB_PASSWORD" ]]; then
+    export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+    echo -e "\e[33mENV undefined: DB_PASSWORD,\e[0m use default $DB_PASSWORD"
 fi
 
 if [[ -z "$APP_KEY" ]]; then
@@ -36,6 +76,9 @@ fi
 
 chown www-data:www-data bootstrap/cache
 chown -R www-data:www-data storage/
+chown -R www-data.www-data /var/www/laravel
+chmod -R 755 /var/www/laravel
+chmod -R 777 /var/www/laravel/storage
 
 if [[ "$DB_CONNECTION" = "sqlite" ]]; then
     touch database/database.sqlite
