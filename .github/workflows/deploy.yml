@@ -39,22 +39,6 @@ jobs:
           npm install
           npm run dev
 
-      - name: Create env file
-        run: |
-          touch .env
-          echo APP_NAME=Laravel >> .env
-          echo APP_ENV=local >> .env
-          echo APP_KEY= >> .env
-          echo APP_DEBUG=true >> .env
-          echo APP_URL=http://localhost >> .env
-          echo DB_CONNECTION=mysql >> .env
-          echo DB_HOST=${{ secrets.DB_HOST }} >> .env
-          echo DB_PORT=3306 >> .env
-          echo DB_DATABASE=${{ secrets.DB_DATABASE }} >> .env
-          echo DB_USERNAME=${{ secrets.DB_USERNAME }} >> .env
-          echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env          
-          cat .env
-
       - name: Prepare Laravel Application
         run: |                    
           php artisan key:generate
