@@ -39,10 +39,6 @@ jobs:
           npm install
           npm run dev
 
-      - name: Prepare Laravel Application
-        run: |                    
-          php artisan key:generate
-
       - name: 'Login to Dockerhub'
         uses: docker/login-action@v1
         with:
