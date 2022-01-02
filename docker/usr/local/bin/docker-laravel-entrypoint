@@ -80,10 +80,6 @@ chown -R www-data.www-data /var/www/laravel
 chmod -R 755 /var/www/laravel
 chmod -R 777 /var/www/laravel/storage
 
-if [[ "$DB_CONNECTION" = "sqlite" ]]; then
-    touch database/database.sqlite
-    chown -R www-data:www-data database/
-fi
 php artisan migrate --force
 
 if [[ "$role" = "app" ]]; then
